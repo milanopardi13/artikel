@@ -17,8 +17,29 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const d = dictionaries[(locale as Locale) ?? "fa"];
-  return { title: { default: d?.brand ?? "Rosie Atelier", template: `%s · Rosie Atelier` }, description: d?.tagline };
+  const site = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+  return {
+    title: { default: d?.brand ?? "Rosie Atelier", template: `%s · Rosie Atelier` },
+    description: d?.tagline,
+    metadataBase: site ? new URL(site) : undefined,
+    openGraph: {
+      type: "website",
+      siteName: d?.brand ?? "Rosie Atelier",
+      title: d?.brand,
+      description: d?.tagline,
+      locale: locale === "fa" ? "fa_IR" : "en_US",
+      images: [{ url: "/images/hero/hero-main.jpg", width: 1200, height: 675, alt: d?.tagline ?? "Rosie Atelier" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: d?.brand,
+      description: d?.tagline,
+      images: ["/images/hero/hero-main.jpg"],
+    },
+    alternates: { canonical: `/${locale}` },
+  };
 }
+
 
 const themeScript = `(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();`;
 
@@ -32,8 +53,12 @@ export default async function LocaleLayout({ children, params }: { children: Rea
     <html lang={locale} dir={dirOf(locale)} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <link rel="preload" href="/fonts/iransanse-web/IRANSansWeb.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/instrument-serif/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/* preload only the font this locale actually renders first */}
+        {locale === "fa" ? (
+          <link rel="preload" href="/fonts/iransanse-web/IRANSansWeb.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        ) : (
+          <link rel="preload" href="/fonts/instrument-serif/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        )}
       </head>
       <body className="min-h-dvh flex flex-col">
         <AppProviders locale={locale}>
@@ -44,7 +69,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
           </main>
           <Footer />
           <CartDrawer />
-          <SearchPalette nav={nav} />
+          <SearchPalette />
         </AppProviders>
       </body>
     </html>

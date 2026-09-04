@@ -8,3 +8,27 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# ── Security headers (applied by the Netlify CDN to every response) ──────────────────
+# The site uses no iframes and no camera/mic/geolocation APIs, so these can stay strict.
+# NOTE: Next.js already sends the precise cache-control values for its own assets; do not
+# add a global Cache-Control here — it would fight the framework.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "0"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
