@@ -1,11 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "export",
-  trailingSlash: true,
-  images: {
-    unoptimized: true,
-  },
+  // Netlify handles SSR, API routes and middleware natively via @netlify/plugin-nextjs
 };
 
 export default nextConfig;
