@@ -21,6 +21,8 @@ import { ColorSwatches } from "@/components/product/ColorSwatches";
 import { AddToCartButton } from "@/components/product/Actions";
 import { useProductColor } from "@/components/cards/ProductCard";
 import { cn, formatPrice, href, t } from "@/lib/utils";
+import type { Dictionary } from "@/lib/i18n/dictionary";
+import type { Locale } from "@/lib/i18n/types";
 import type { PatternCardData } from "@/components/cards/PatternCard";
 import type { ProductCardData } from "@/components/cards/ProductCard";
 
@@ -127,14 +129,15 @@ function Panel({
     el.addEventListener("mousemove",  onMouseMove);
     el.addEventListener("mouseleave", onWrapLeave);
     el.addEventListener("mouseenter", onWrapEnter);
+    const timerRef = hideTimer;
     return () => {
       el.removeEventListener("mousemove",  onMouseMove);
       el.removeEventListener("mouseleave", onWrapLeave);
       el.removeEventListener("mouseenter", onWrapEnter);
-      if (hideTimer.current) clearTimeout(hideTimer.current);
-      if (rafRef.current)    cancelAnimationFrame(rafRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (rafRef.current)   cancelAnimationFrame(rafRef.current);
     };
-  }, [onMouseMove, onWrapLeave, onWrapEnter]);
+  }, [onMouseMove, onWrapLeave, onWrapEnter, hideTimer]);
 
   const { locale, dict } = useLocale();
 
@@ -204,12 +207,12 @@ function ProductPanel({
   p, dict, locale, imageRef,
 }: {
   p: ProductCardData;
-  dict: any;
-  locale: string;
+  dict: Dictionary;
+  locale: Locale;
   imageRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const { colorId, setColorId, color } = useProductColor(p);
-  const url = href(locale as any, `/shop/${p.slug}`);
+  const url = href(locale, `/shop/${p.slug}`);
   const out = color.stock <= 0;
 
   return (
@@ -224,7 +227,7 @@ function ProductPanel({
           <Image
             key={color.image}
             src={color.image}
-            alt={t(p.title, locale as any)}
+            alt={t(p.title, locale)}
             fill
             sizes={`${PANEL_W + 72}px`}
             className="object-cover"
@@ -250,13 +253,13 @@ function ProductPanel({
               <button
                 key={c.id}
                 onClick={(e) => { e.stopPropagation(); setColorId(c.id); }}
-                title={t(c.name, locale as any)}
+                title={t(c.name, locale)}
                 className={cn(
                   "relative h-9 w-9 overflow-hidden rounded-md ring-offset-1 ring-offset-surface transition-all duration-200 hover:scale-110",
                   c.id === colorId ? "ring-2 ring-white scale-110 shadow-md" : "ring-1 ring-white/40 hover:ring-white/80",
                 )}
               >
-                <Image src={c.image} alt={t(c.name, locale as any)} fill sizes="36px" className="object-cover" />
+                <Image src={c.image} alt={t(c.name, locale)} fill sizes="36px" className="object-cover" />
               </button>
             ))}
           </div>
@@ -283,32 +286,32 @@ function ProductPanel({
           <div className="min-w-0">
             <Sku value={p.sku} />
             <h3 className="mt-1 font-display text-[18px] font-semibold leading-tight text-foreground">
-              {t(p.title, locale as any)}
+              {t(p.title, locale)}
             </h3>
             {p.artist && (
-              <p className="mt-0.5 text-caption text-foreground-secondary">{t(p.artist.name, locale as any)}</p>
+              <p className="mt-0.5 text-caption text-foreground-secondary">{t(p.artist.name, locale)}</p>
             )}
           </div>
           <div className="shrink-0 text-end">
-            <span className="block text-h4 font-bold tabular text-foreground">{formatPrice(p.price, locale as any)}</span>
+            <span className="block text-h4 font-bold tabular text-foreground">{formatPrice(p.price, locale)}</span>
             {p.compareAt && (
-              <span className="block text-caption tabular text-muted line-through">{formatPrice(p.compareAt, locale as any)}</span>
+              <span className="block text-caption tabular text-muted line-through">{formatPrice(p.compareAt, locale)}</span>
             )}
           </div>
         </div>
 
-        <p className="mt-2.5 line-clamp-2 text-body-sm text-foreground-secondary">{t(p.description, locale as any)}</p>
+        <p className="mt-2.5 line-clamp-2 text-body-sm text-foreground-secondary">{t(p.description, locale)}</p>
 
         {/* swatches */}
         <div className="mt-3.5 flex items-center gap-2.5">
           <ColorSwatches
-            options={p.colors.map((c) => ({ id: c.id, name: t(c.name, locale as any), hex: c.hex, stock: c.stock }))}
+            options={p.colors.map((c) => ({ id: c.id, name: t(c.name, locale), hex: c.hex, stock: c.stock }))}
             value={colorId}
             onChange={setColorId}
             size="md"
             label={dict.common.color}
           />
-          <span className="text-caption text-foreground-secondary">{t(color.name, locale as any)}</span>
+          <span className="text-caption text-foreground-secondary">{t(color.name, locale)}</span>
         </div>
 
         {/* specs */}
@@ -316,8 +319,8 @@ function ProductPanel({
           <dl className="mt-4 grid grid-cols-3 gap-x-2 gap-y-2 rounded-lg bg-background-secondary px-3 py-2.5">
             {p.specs.slice(0, 3).map((s) => (
               <div key={t(s.label, "en")}>
-                <dt className="text-[10px] uppercase tracking-wider text-muted">{t(s.label, locale as any)}</dt>
-                <dd className="mt-0.5 text-caption font-medium text-foreground">{t(s.value, locale as any)}</dd>
+                <dt className="text-[10px] uppercase tracking-wider text-muted">{t(s.label, locale)}</dt>
+                <dd className="mt-0.5 text-caption font-medium text-foreground">{t(s.value, locale)}</dd>
               </div>
             ))}
           </dl>
@@ -336,7 +339,7 @@ function ProductPanel({
           <AddToCartButton
             disabled={out}
             className="h-10 flex-1 text-sm"
-            line={{ kind: "product", id: p.id, sku: p.sku, title: t(p.title, locale as any), image: color.image, price: p.price, colorName: t(color.name, locale as any), colorHex: color.hex, href: url }}
+            line={{ kind: "product", id: p.id, sku: p.sku, title: t(p.title, locale), image: color.image, price: p.price, colorName: t(color.name, locale), colorHex: color.hex, href: url }}
           />
           <Link href={url} className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border text-foreground transition-colors hover:border-foreground hover:bg-surface">
             <ArrowUpRight className="h-4 w-4 rtl-flip" />
@@ -354,11 +357,11 @@ function PatternPanel({
   p, dict, locale, imageRef,
 }: {
   p: PatternCardData;
-  dict: any;
-  locale: string;
+  dict: Dictionary;
+  locale: Locale;
   imageRef: React.RefObject<HTMLDivElement | null>;
 }) {
-  const url = href(locale as any, `/patterns/${p.slug}`);
+  const url = href(locale, `/patterns/${p.slug}`);
 
   return (
     <>
@@ -370,7 +373,7 @@ function PatternPanel({
         >
           <Image
             src={p.image}
-            alt={t(p.title, locale as any)}
+            alt={t(p.title, locale)}
             fill
             sizes={`${PANEL_W + 72}px`}
             className="object-cover"
@@ -417,22 +420,22 @@ function PatternPanel({
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-1.5">
               <Sku value={p.sku} />
-              {p.category && <Badge>{t(p.category.name, locale as any)}</Badge>}
+              {p.category && <Badge>{t(p.category.name, locale)}</Badge>}
             </div>
             <h3 className="mt-1 font-display text-[18px] font-semibold leading-tight text-foreground">
-              {t(p.title, locale as any)}
+              {t(p.title, locale)}
             </h3>
             {p.artist && (
-              <p className="mt-0.5 text-caption text-foreground-secondary">{t(p.artist.name, locale as any)}</p>
+              <p className="mt-0.5 text-caption text-foreground-secondary">{t(p.artist.name, locale)}</p>
             )}
           </div>
-          <span className="shrink-0 text-h4 font-bold tabular text-foreground">{formatPrice(p.price, locale as any)}</span>
+          <span className="shrink-0 text-h4 font-bold tabular text-foreground">{formatPrice(p.price, locale)}</span>
         </div>
 
-        <p className="mt-2.5 line-clamp-2 text-body-sm text-foreground-secondary">{t(p.description, locale as any)}</p>
+        <p className="mt-2.5 line-clamp-2 text-body-sm text-foreground-secondary">{t(p.description, locale)}</p>
 
         <dl className="mt-4 grid grid-cols-2 gap-3 rounded-lg bg-background-secondary px-3 py-2.5 text-sm">
-          <div><dt className="text-caption text-muted">{dict.common.repeat}</dt><dd className="mt-0.5 font-medium text-foreground">{t(p.specs.repeat, locale as any)}</dd></div>
+          <div><dt className="text-caption text-muted">{dict.common.repeat}</dt><dd className="mt-0.5 font-medium text-foreground">{t(p.specs.repeat, locale)}</dd></div>
           <div><dt className="text-caption text-muted">{dict.common.dpi}</dt><dd className="mt-0.5 font-medium text-foreground">{p.specs.dpi}</dd></div>
           <div><dt className="text-caption text-muted">{dict.common.formats}</dt><dd className="mt-0.5 font-medium text-foreground">{p.specs.formats}</dd></div>
           <div><dt className="text-caption text-muted">{dict.common.colors}</dt><dd className="mt-0.5 font-medium text-foreground">{p.specs.colors}</dd></div>
@@ -441,7 +444,7 @@ function PatternPanel({
         <div className="mt-4 flex items-center gap-2.5">
           <AddToCartButton
             className="h-10 flex-1 text-sm"
-            line={{ kind: "pattern", id: p.id, sku: p.sku, title: t(p.title, locale as any), image: p.image, price: p.price, href: url }}
+            line={{ kind: "pattern", id: p.id, sku: p.sku, title: t(p.title, locale), image: p.image, price: p.price, href: url }}
           />
           <Link href={url} className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border text-foreground transition-colors hover:border-foreground hover:bg-surface">
             <ArrowUpRight className="h-4 w-4 rtl-flip" />
