@@ -31,12 +31,23 @@ export async function PUT(req: Request) {
   if (!body || !Array.isArray(body.patterns) || !Array.isArray(body.products)) {
     return NextResponse.json({ ok: false, error: "invalid_payload" }, withNoStore({ status: 400 }));
   }
-  await saveContent(body);
+  try {
+    await saveContent(body);
+  } catch (e) {
+    // Serverless filesystems (Netlify/Vercel) are read-only: without Redis/Blob the write fails here.
+    console.error("[admin/content] storage write failed:", e);
+    return NextResponse.json({ ok: false, error: "storage_write_failed" }, withNoStore({ status: 502 }));
+  }
   return NextResponse.json({ ok: true }, withNoStore());
 }
 
 export async function DELETE() {
   if (!(await requireAdmin())) return unauthorized();
-  await resetContent();
+  try {
+    await resetContent();
+  } catch (e) {
+    console.error("[admin/content] storage reset failed:", e);
+    return NextResponse.json({ ok: false, error: "storage_reset_failed" }, withNoStore({ status: 502 }));
+  }
   return NextResponse.json({ ok: true }, withNoStore());
 }

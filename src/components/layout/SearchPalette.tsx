@@ -6,30 +6,84 @@ import { ArrowUpRight, Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useSearch } from "@/components/providers/AppProviders";
 import { Modal } from "@/components/ui/Modal";
+import type { Localized } from "@/lib/i18n/types";
 import { cn, href, t } from "@/lib/utils";
-import type { NavData } from "./nav-data";
 
 type Kind = "pattern" | "product" | "artist" | "portfolio" | "education" | "category";
 interface Result { kind: Kind; title: string; sub?: string; image?: string; href: string }
 
-export function SearchPalette({ nav }: { nav: NavData }) {
+/** Raw shape of /api/search-index — fetched lazily so the full catalog does not ride in every page payload. */
+interface SearchDoc { slug: string; title?: Localized; name?: Localized; profession?: Localized; sku?: string; type?: string; image?: string; cover?: string; avatar?: string }
+interface SearchIndexPayload {
+  patterns: SearchDoc[];
+  products: SearchDoc[];
+  artists: SearchDoc[];
+  portfolios: SearchDoc[];
+  education: SearchDoc[];
+  categories: SearchDoc[];
+}
+
+let prefetched: SearchIndexPayload | null = null;
+
+export function SearchPalette() {
   const { isOpen, close } = useSearch();
   const { locale, dict } = useLocale();
   const [q, setQ] = useState("");
   const [idx, setIdx] = useState(0);
+  const [nav, setNav] = useState<SearchIndexPayload | null>(prefetched);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  /* load the index on first open (or reuse the idle prefetch) */
+  useEffect(() => {
+    if (nav || prefetched) return;
+    let active = true;
+    fetch("/api/search-index", { cache: "default" })
+      .then((r) => (r.ok ? (r.json() as Promise<SearchIndexPayload>) : Promise.reject(new Error(`search-index ${r.status}`))))
+      .then((d) => {
+        prefetched = d;
+        if (active) setNav(d);
+      })
+      .catch(() => {
+        if (active) setNav({ patterns: [], products: [], artists: [], portfolios: [], education: [], categories: [] });
+      });
+    return () => {
+      active = false;
+    };
+  }, [nav, isOpen]);
+
+  /* warm the cache while the browser is idle, so opening the palette feels instant */
+  useEffect(() => {
+    if (prefetched) return;
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number };
+    const run = () => {
+      fetch("/api/search-index", { cache: "default" })
+        .then((r) => (r.ok ? (r.json() as Promise<SearchIndexPayload>) : Promise.reject(null)))
+        .then((d) => {
+          prefetched = d;
+        })
+        .catch(() => undefined);
+    };
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(run, { timeout: 4000 });
+      return () => void id;
+    }
+    const tId = window.setTimeout(run, 3000);
+    return () => window.clearTimeout(tId);
+  }, []);
+
   const index = useMemo<Result[]>(() => {
+    if (!nav) return [];
     const p = (path: string) => href(locale, path);
     return [
       ...nav.patterns.map((x) => ({ kind: "pattern" as Kind, title: t(x.title, locale), sub: x.sku, image: x.image, href: p(`/patterns/${x.slug}`) })),
-      ...nav.storeProducts.map((x) => ({ kind: "product" as Kind, title: t(x.title, locale), sub: x.sku, image: x.colors[0]?.image, href: p(`/shop/${x.slug}`) })),
+      ...nav.products.map((x) => ({ kind: "product" as Kind, title: t(x.title, locale), sub: x.sku, image: x.image, href: p(`/shop/${x.slug}`) })),
       ...nav.artists.map((x) => ({ kind: "artist" as Kind, title: t(x.name, locale), sub: t(x.profession, locale), image: x.avatar, href: p(`/artists/${x.slug}`) })),
       ...nav.portfolios.map((x) => ({ kind: "portfolio" as Kind, title: t(x.title, locale), image: x.cover, href: p(`/portfolio/${x.slug}`) })),
       ...nav.education.map((x) => ({ kind: "education" as Kind, title: t(x.title, locale), sub: x.type, image: x.image, href: p(`/academy/${x.slug}`) })),
       ...nav.categories.map((x) => ({ kind: "category" as Kind, title: t(x.name, locale), image: x.image, href: p(`/styles/${x.slug}`) })),
     ];
   }, [nav, locale]);
+
 
   const results = useMemo(() => {
     const s = q.trim().toLowerCase();

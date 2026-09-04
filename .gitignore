@@ -32,11 +32,22 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
+
+# netlify
+.netlify
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 /data/*.json
+
+# local agent/tooling artifacts & logs (never commit these)
+/dev.log
+/*.log
+.Milo/
+.bob/
+.bruno/
