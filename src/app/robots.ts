@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { getSiteOrigin } from "@/lib/site-url";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.netlify.app";
+const SITE_URL = getSiteOrigin();
 
 /** Robots are generated per build and revalidated hourly — no admin secrets, no PII, no API. */
 export const revalidate = 3600;

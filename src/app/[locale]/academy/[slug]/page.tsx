@@ -12,6 +12,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { enrichEducation, enrichPattern, enrichProduct, getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 import { faNum, formatDuration, href, t } from "@/lib/utils";
 
 type Props = { params: Promise<{ locale: Locale; slug: string }> };
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const site = await getSite();
   const e = site.education.find((x) => x.slug === slug);
-  return e ? { title: t(e.title, locale), description: t(e.excerpt, locale) } : {};
+  return e ? { title: t(e.title, locale), description: t(e.excerpt, locale), alternates: { canonical: canonical(locale, `/academy/${slug}`) } } : {};
 }
 
 export default async function EducationDetail({ params }: Props) {

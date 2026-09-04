@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/ui/PageHero";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 
 const docs = ["privacy", "terms", "licenses"] as const;
 type Doc = (typeof docs)[number];
@@ -11,7 +12,7 @@ type Props = { params: Promise<{ locale: Locale; doc: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, doc } = await params;
   const d = dictionaries[locale];
-  return { title: d.footer[doc as Doc] ?? d.footer.legal };
+  return { title: d.footer[doc as Doc] ?? d.footer.legal, alternates: { canonical: canonical(locale, `/legal/${doc}`) } };
 }
 export default async function LegalPage({ params }: Props) {
   const { locale, doc } = await params;

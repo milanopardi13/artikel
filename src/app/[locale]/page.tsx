@@ -17,13 +17,18 @@ import {
 import { artistStats, enrichEducation, enrichPattern, enrichPortfolio, enrichProduct, getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 import { t } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const site = await getSite();
   const meta = site.seo.find((s) => s.path === "/");
-  return { title: meta ? { absolute: t(meta.title, locale) } : undefined, description: meta ? t(meta.description, locale) : undefined };
+  return {
+    title: meta ? { absolute: t(meta.title, locale) } : undefined,
+    description: meta ? t(meta.description, locale) : undefined,
+    alternates: { canonical: canonical(locale) },
+  };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {

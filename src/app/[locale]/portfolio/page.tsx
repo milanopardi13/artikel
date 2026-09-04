@@ -4,13 +4,14 @@ import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { enrichPortfolio, getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 import { t } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const site = await getSite();
   const m = site.seo.find((s) => s.path === "/portfolio");
-  return { title: m ? { absolute: t(m.title, locale) } : dictionaries[locale].nav.portfolio, description: m ? t(m.description, locale) : undefined };
+  return { title: m ? { absolute: t(m.title, locale) } : dictionaries[locale].nav.portfolio, description: m ? t(m.description, locale) : undefined, alternates: { canonical: canonical(locale, "/portfolio") } };
 }
 
 export default async function PortfolioPage({ params }: { params: Promise<{ locale: Locale }> }) {

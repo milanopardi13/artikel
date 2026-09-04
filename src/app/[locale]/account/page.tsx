@@ -5,7 +5,7 @@ import type { Locale } from "@/lib/i18n/types";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: dictionaries[locale].nav.account };
+  return { title: dictionaries[locale].nav.account, robots: { index: false } };
 }
 export default function AccountPage() {
   return <AccountView />;

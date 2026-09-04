@@ -11,6 +11,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { enrichPattern, enrichProduct, getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 import { href, t } from "@/lib/utils";
 
 type Props = { params: Promise<{ locale: Locale; slug: string }> };
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const site = await getSite();
   const p = site.products.find((x) => x.slug === slug);
-  return p ? { title: t(p.title, locale), description: t(p.description, locale) } : {};
+  return p ? { title: t(p.title, locale), description: t(p.description, locale), alternates: { canonical: canonical(locale, `/shop/${slug}`) } } : {};
 }
 
 export default async function ProductPage({ params }: Props) {

@@ -8,10 +8,11 @@ import { EmptyState } from "@/components/ui/States";
 import { enrichEducation, enrichPattern, enrichPortfolio, enrichProduct, getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { NOINDEX, canonical } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: dictionaries[locale].nav.search };
+  return { title: dictionaries[locale].nav.search, robots: NOINDEX, alternates: { canonical: canonical(locale, "/search") } };
 }
 export default async function SearchPage({ params, searchParams }: { params: Promise<{ locale: Locale }>; searchParams: Promise<{ q?: string }> }) {
   const [{ locale }, { q = "" }] = await Promise.all([params, searchParams]);

@@ -7,11 +7,12 @@ import { InquiryForm } from "@/components/ui/InquiryForm";
 import { getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 import { t } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: dictionaries[locale].nav.becomeCreator };
+  return { title: dictionaries[locale].nav.becomeCreator, alternates: { canonical: canonical(locale, "/creators/join") } };
 }
 export default async function JoinPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
