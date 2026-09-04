@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: dictionaries[locale].footer.returns };
+  return { title: dictionaries[locale].footer.returns, alternates: { canonical: canonical(locale, "/returns") } };
 }
 export default async function ReturnsPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;

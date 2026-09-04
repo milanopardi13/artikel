@@ -10,13 +10,14 @@ import { StyleCard } from "@/components/cards/StyleCard";
 import { enrichEducation, getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 import { faNum, href, t } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const site = await getSite();
   const m = site.seo.find((s) => s.path === "/academy");
-  return { title: m ? { absolute: t(m.title, locale) } : dictionaries[locale].nav.education, description: m ? t(m.description, locale) : undefined };
+  return { title: m ? { absolute: t(m.title, locale) } : dictionaries[locale].nav.education, description: m ? t(m.description, locale) : undefined, alternates: { canonical: canonical(locale, "/academy") } };
 }
 
 export default async function AcademyPage({ params }: { params: Promise<{ locale: Locale }> }) {

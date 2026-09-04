@@ -9,10 +9,11 @@ import { PortfolioCard } from "@/components/cards/PortfolioCard";
 import { enrichPortfolio, getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: dictionaries[locale].nav.projects };
+  return { title: dictionaries[locale].nav.projects, alternates: { canonical: canonical(locale, "/projects") } };
 }
 export default async function ProjectsPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;

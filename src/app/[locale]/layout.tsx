@@ -10,6 +10,7 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { getNavData } from "@/lib/data/nav";
 import { LOCALES, dirOf, type Locale } from "@/lib/i18n/types";
 import { dictionaries } from "@/lib/i18n/dictionary";
+import { getSiteOrigin } from "@/lib/site-url";
 
 // Content is admin-managed at runtime (data/content.json) → render on demand so edits are live.
 export const dynamic = "force-dynamic";
@@ -17,26 +18,27 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const d = dictionaries[(locale as Locale) ?? "fa"];
-  const site = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+  const base = getSiteOrigin();
   return {
     title: { default: d?.brand ?? "Rosie Atelier", template: `%s · Rosie Atelier` },
     description: d?.tagline,
-    metadataBase: site ? new URL(site) : undefined,
+    // Fixed to a bare origin — the canonical URL itself is set per-page so it always
+    // points at the real route (e.g. /fa/about), never at the locale root.
+    metadataBase: new URL(base),
     openGraph: {
       type: "website",
       siteName: d?.brand ?? "Rosie Atelier",
       title: d?.brand,
       description: d?.tagline,
       locale: locale === "fa" ? "fa_IR" : "en_US",
-      images: [{ url: "/images/hero/hero-main.jpg", width: 1200, height: 675, alt: d?.tagline ?? "Rosie Atelier" }],
+      images: [{ url: "/images/og/rosie-atelier.jpg", width: 1200, height: 630, alt: d?.tagline ?? "Rosie Atelier" }],
     },
     twitter: {
       card: "summary_large_image",
       title: d?.brand,
       description: d?.tagline,
-      images: ["/images/hero/hero-main.jpg"],
+      images: ["/images/og/rosie-atelier.jpg"],
     },
-    alternates: { canonical: `/${locale}` },
   };
 }
 

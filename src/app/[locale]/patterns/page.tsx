@@ -8,13 +8,14 @@ import { enrichPattern, getSite } from "@/lib/data/queries";
 import { filterPatterns, type SP } from "@/lib/data/filters";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 import { t } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const site = await getSite();
   const m = site.seo.find((s) => s.path === "/patterns");
-  return { title: m ? { absolute: t(m.title, locale) } : dictionaries[locale].nav.patterns, description: m ? t(m.description, locale) : undefined };
+  return { title: m ? { absolute: t(m.title, locale) } : dictionaries[locale].nav.patterns, description: m ? t(m.description, locale) : undefined, alternates: { canonical: canonical(locale, "/patterns") } };
 }
 
 export default async function PatternsPage({ params, searchParams }: { params: Promise<{ locale: Locale }>; searchParams: Promise<SP> }) {

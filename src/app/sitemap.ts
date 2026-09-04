@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getContent } from "@/lib/data/store";
 import { DEFAULT_LOCALE, LOCALES, type Locale } from "@/lib/i18n/types";
+import { getSiteOrigin } from "@/lib/site-url";
 
 /** Static route segments of the storefront (locale-prefixed). Admin/checkout/account are excluded. */
 const STATIC_PAGES = [
@@ -35,7 +36,7 @@ interface SiteContentLike {
 
 const LEGAL_DOCS = ["privacy", "terms", "licenses"];
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.netlify.app").replace(/\/$/, "");
+const SITE_URL = getSiteOrigin();
 
 /** Refresh hourly so admin-created slugs appear without a redeploy. */
 export const revalidate = 3600;

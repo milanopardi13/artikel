@@ -4,11 +4,12 @@ import { StyleCard } from "@/components/cards/StyleCard";
 import { getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 import { faNum, href, t } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: dictionaries[locale].nav.spaces };
+  return { title: dictionaries[locale].nav.spaces, alternates: { canonical: canonical(locale, "/spaces") } };
 }
 export default async function SpacesPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;

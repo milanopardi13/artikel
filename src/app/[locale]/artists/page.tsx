@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/Button";
 import { artistStats, getSite } from "@/lib/data/queries";
 import { dictionaries } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/types";
+import { canonical } from "@/lib/seo";
 import { href } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
-  return { title: dictionaries[locale].nav.artists };
+  return { title: dictionaries[locale].nav.artists, alternates: { canonical: canonical(locale, "/artists") } };
 }
 
 export default async function ArtistsPage({ params }: { params: Promise<{ locale: Locale }> }) {
