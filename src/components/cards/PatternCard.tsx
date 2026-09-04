@@ -8,6 +8,7 @@ import { useLocale } from "@/components/providers/AppProviders";
 import { Badge, Sku } from "@/components/ui/Badge";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { AddToCartButton, FavoriteButton } from "@/components/product/Actions";
+import { useHoverCard } from "@/components/ui/HoverCard";
 import { cn, formatPrice, href, t } from "@/lib/utils";
 import type { Artist, Category, Pattern } from "@/lib/types";
 import { QuickView } from "@/components/product/QuickView";
@@ -22,12 +23,13 @@ type Variant = "default" | "large" | "wide" | "compact";
 export function PatternCard({ pattern, variant = "default", priority, className }: { pattern: PatternCardData; variant?: Variant; priority?: boolean; className?: string }) {
   const { locale, dict } = useLocale();
   const [quick, setQuick] = useState(false);
+  const { onMouseEnter, onMouseLeave, onClick, portal } = useHoverCard({ kind: "pattern", pattern });
   const url = href(locale, `/patterns/${pattern.slug}`);
   const ratio = variant === "large" ? "aspect-[4/5]" : variant === "wide" ? "aspect-[16/10]" : variant === "compact" ? "aspect-square" : "aspect-[4/5]";
 
   return (
     <>
-      <SpotlightCard as="article" className={cn("group relative flex flex-col rounded-lg", className)}>
+      <SpotlightCard as="article" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick} className={cn("group relative flex flex-col rounded-lg", className)}>
         <Link href={url} className="relative block overflow-hidden rounded-lg bg-background-secondary" aria-label={t(pattern.title, locale)}>
           <div className={cn("relative w-full", ratio)}>
             <Image
@@ -105,6 +107,7 @@ export function PatternCard({ pattern, variant = "default", priority, className 
           </div>
         </div>
       </SpotlightCard>
+      {portal}
       {quick && <QuickView open={quick} onClose={() => setQuick(false)} item={{ kind: "pattern", pattern }} />}
     </>
   );

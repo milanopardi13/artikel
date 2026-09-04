@@ -1,0 +1,210 @@
+   ▲ Next.js 15.5.25 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://10.211.1.10:3000
+
+ ✓ Starting...
+ ○ Compiling middleware ...
+ ✓ Compiled middleware in 657ms
+ ✓ Ready in 4.1s
+ ○ Compiling /[locale]/portfolio ...
+ ✓ Compiled /[locale]/portfolio in 12s
+ GET /fa/portfolio 200 in 19302ms
+ ○ Compiling /api/auth/me ...
+ ✓ Compiled /api/auth/me in 7.3s
+ GET /api/auth/me 200 in 8359ms
+ ○ Compiling /[locale] ...
+ GET /fa/portfolio 200 in 5618ms
+ GET /api/auth/me 200 in 1065ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 2565ms
+ ✓ Compiled /[locale] in 5.9s
+ GET /fa 200 in 13587ms
+ GET /fa 200 in 15752ms
+ GET /api/auth/me 200 in 1962ms
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 25.8s
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.f01axlowxhc'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.f01axlowxhc'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.1uevlab0e1j'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.1uevlab0e1j'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.ayxfiar7ptg'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.ayxfiar7ptg'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.1tt43o5p1jn'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.1tt43o5p1jn'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.unw1j4ah76o'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.unw1j4ah76o'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.rbmt4i6nsjp'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.rbmt4i6nsjp'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.eaj2sl5jxkb'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.eaj2sl5jxkb'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.72s2qf5u4qg'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.72s2qf5u4qg'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.1bcm2h0jaam'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.1bcm2h0jaam'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.62vqrguz42i'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.62vqrguz42i'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.i1nkxzz3xrk'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.i1nkxzz3xrk'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.6gfr0zvotcd'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.6gfr0zvotcd'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.bj34new5vw6'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.bj34new5vw6'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\favicon.ico\[__metadata_id__]\route\app-paths-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\favicon.ico\\[__metadata_id__]\\route\\app-paths-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.0c3g6hpianfg'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.0c3g6hpianfg'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\static\development\_buildManifest.js.tmp.zjdk16qj978'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\static\\development\\_buildManifest.js.tmp.zjdk16qj978'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\pages\_app\build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\pages\\_app\\build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\app\[locale]\page\app-build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\app\\[locale]\\page\\app-build-manifest.json'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\pages\_app\build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\pages\\_app\\build-manifest.json'
+}
+[Error: ENOENT: no such file or directory, open 'C:\Users\Milo\Downloads\rozbolt-main\rozbolt-main\.next\server\pages\_app\build-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\Milo\\Downloads\\rozbolt-main\\rozbolt-main\\.next\\server\\pages\\_app\\build-manifest.json'
+}

@@ -10,6 +10,7 @@ import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { AddToCartButton, FavoriteButton } from "@/components/product/Actions";
 import { ColorSwatches } from "@/components/product/ColorSwatches";
 import { QuickView } from "@/components/product/QuickView";
+import { useHoverCard } from "@/components/ui/HoverCard";
 import { cn, formatPrice, href, t } from "@/lib/utils";
 import type { Artist, Category, Pattern, Product } from "@/lib/types";
 
@@ -29,6 +30,7 @@ export function ProductCard({ product, variant = "default", className, priority 
   const { locale, dict } = useLocale();
   const { colorId, setColorId, color } = useProductColor(product);
   const [quick, setQuick] = useState(false);
+  const { onMouseEnter, onMouseLeave, onClick, portal } = useHoverCard({ kind: "product", product });
   const url = href(locale, `/shop/${product.slug}`);
   const siteOwned = !product.artistId;
   const out = color.stock <= 0;
@@ -36,34 +38,37 @@ export function ProductCard({ product, variant = "default", className, priority 
 
   if (variant === "row") {
     return (
-      <SpotlightCard as="article" className={cn("group flex gap-4 rounded-lg border border-border bg-surface p-3 transition-shadow hover:shadow-medium", className)}>
-        <Link href={url} className="relative h-28 w-24 shrink-0 overflow-hidden rounded-md bg-background-secondary">
-          <Image key={color.image} src={color.image} alt={t(product.title, locale)} fill sizes="96px" className="img-zoom object-cover anim-scale-fade" />
-        </Link>
-        <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <Link href={url} className="block truncate text-[15px] font-medium text-foreground hover:text-accent">{t(product.title, locale)}</Link>
-              <div className="mt-1 flex items-center gap-2"><Sku value={product.sku} />{siteOwned ? <Badge tone="accent">{dict.common.siteExclusive}</Badge> : <Badge tone="blue">{dict.common.artistProduct}</Badge>}</div>
+      <>
+        <SpotlightCard as="article" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick} className={cn("group flex gap-4 rounded-lg border border-border bg-surface p-3 transition-shadow hover:shadow-medium cursor-pointer", className)}>
+          <Link href={url} className="relative h-28 w-24 shrink-0 overflow-hidden rounded-md bg-background-secondary">
+            <Image key={color.image} src={color.image} alt={t(product.title, locale)} fill sizes="96px" className="img-zoom object-cover anim-scale-fade" />
+          </Link>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <Link href={url} className="block truncate text-[15px] font-medium text-foreground hover:text-accent">{t(product.title, locale)}</Link>
+                <div className="mt-1 flex items-center gap-2"><Sku value={product.sku} />{siteOwned ? <Badge tone="accent">{dict.common.siteExclusive}</Badge> : <Badge tone="blue">{dict.common.artistProduct}</Badge>}</div>
+              </div>
+              <span className="shrink-0 text-sm font-semibold tabular">{formatPrice(product.price, locale)}</span>
             </div>
-            <span className="shrink-0 text-sm font-semibold tabular">{formatPrice(product.price, locale)}</span>
-          </div>
-          <p className="mt-1.5 line-clamp-1 text-caption text-foreground-secondary">{product.specs.map((s) => `${t(s.label, locale)}: ${t(s.value, locale)}`).join(" · ")}</p>
-          <div className="mt-auto flex items-center justify-between gap-3 pt-2">
-            <div className="flex items-center gap-2">
-              <ColorSwatches options={swatches} value={colorId} onChange={setColorId} size="sm" label={dict.common.color} />
-              <span className="text-caption text-muted">{t(color.name, locale)}</span>
+            <p className="mt-1.5 line-clamp-1 text-caption text-foreground-secondary">{product.specs.map((s) => `${t(s.label, locale)}: ${t(s.value, locale)}`).join(" · ")}</p>
+            <div className="mt-auto flex items-center justify-between gap-3 pt-2">
+              <div className="flex items-center gap-2">
+                <ColorSwatches options={swatches} value={colorId} onChange={setColorId} size="sm" label={dict.common.color} />
+                <span className="text-caption text-muted">{t(color.name, locale)}</span>
+              </div>
+              <AddToCartButton variant="icon" disabled={out} line={{ kind: "product", id: product.id, sku: product.sku, title: t(product.title, locale), image: color.image, price: product.price, colorName: t(color.name, locale), colorHex: color.hex, href: url }} />
             </div>
-            <AddToCartButton variant="icon" disabled={out} line={{ kind: "product", id: product.id, sku: product.sku, title: t(product.title, locale), image: color.image, price: product.price, colorName: t(color.name, locale), colorHex: color.hex, href: url }} />
           </div>
-        </div>
-      </SpotlightCard>
+        </SpotlightCard>
+        {portal}
+      </>
     );
   }
 
   return (
     <>
-      <SpotlightCard as="article" className={cn("group relative flex flex-col rounded-lg", className)}>
+      <SpotlightCard as="article" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick} className={cn("group relative flex flex-col rounded-lg", className)}>
         <Link href={url} className="relative block overflow-hidden rounded-lg bg-background-secondary" aria-label={t(product.title, locale)}>
           <div className={cn("relative w-full", variant === "large" ? "aspect-[4/5]" : "aspect-square")}>
             <Image
@@ -125,6 +130,7 @@ export function ProductCard({ product, variant = "default", className, priority 
           </div>
         </div>
       </SpotlightCard>
+      {portal}
       {quick && <QuickView open={quick} onClose={() => setQuick(false)} item={{ kind: "product", product }} />}
     </>
   );

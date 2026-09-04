@@ -17,29 +17,64 @@ interface Props {
 
 export function Hero({ hero, patterns, stats }: Props) {
   const { locale, dict } = useLocale();
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  /* slow parallax — rAF-throttled, transform only */
+  /* bg images: use hero.images if ≥2, otherwise null (fallback to single image / timer) */
+  const bgImages = hero.images && hero.images.length > 1 ? hero.images : null;
+  const count = bgImages ? bgImages.length : patterns.length;
+
+  /* ── scroll-driven mode (when bgImages exist) ── */
   useEffect(() => {
+    if (!bgImages) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     let ticking = false;
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        const y = window.scrollY;
-        if (mediaRef.current && y < window.innerHeight * 1.2) mediaRef.current.style.transform = `translate3d(0, ${y * 0.18}px, 0) scale(1.06)`;
+        const wrapper = wrapperRef.current;
+        if (!wrapper) { ticking = false; return; }
+
+        const { top, height } = wrapper.getBoundingClientRect();
+        /* scrolled fraction within the wrapper (0 → 1) */
+        const scrolled = Math.max(0, Math.min(1, -top / (height - window.innerHeight)));
+        const slide = scrolled * count;
+        const idx = Math.min(Math.floor(slide), count - 1);
+        const frac = slide - Math.floor(slide);
+
+        setActive(idx);
+        setProgress(frac);
+
+        /* parallax on the sticky bg layer */
+        if (mediaRef.current) {
+          const y = Math.max(0, -top);
+          mediaRef.current.style.transform = `translate3d(0, ${y * 0.08}px, 0) scale(1.06)`;
+        }
+        /* pattern card floats upward */
+        if (cardRef.current) {
+          const y = Math.max(0, -top);
+          cardRef.current.style.transform = `translate3d(0, ${-(y * 0.14)}px, 0)`;
+        }
+
         ticking = false;
       });
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
-  /* pattern preview rotation with progress indicator */
+    window.addEventListener("scroll", onScroll, { passive: true });
+    /* run once on mount so initial state is correct */
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count]);
+
+  /* ── timer-driven mode (no bgImages) ── */
   useEffect(() => {
+    if (bgImages) return;
     if (patterns.length < 2) return;
     const D = 5200;
     const start = performance.now();
@@ -55,20 +90,58 @@ export function Hero({ hero, patterns, stats }: Props) {
       cancelAnimationFrame(raf);
       window.clearInterval(id);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patterns.length]);
 
-  const current = patterns[active];
+  /* ── parallax for timer mode ── */
+  useEffect(() => {
+    if (bgImages) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const vh = window.innerHeight * 1.2;
+        if (y < vh) {
+          if (mediaRef.current) mediaRef.current.style.transform = `translate3d(0, ${y * 0.08}px, 0) scale(1.06)`;
+          if (cardRef.current) cardRef.current.style.transform = `translate3d(0, ${-(y * 0.14)}px, 0)`;
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  return (
-    <section className="relative isolate h-[100svh] min-h-[640px] max-h-[1080px] w-full overflow-hidden bg-[#0d1117] text-white">
+  const current = patterns[active % patterns.length];
+
+  /* ── inner section (shared JSX) ── */
+  const inner = (
+    <section className={cn(
+      "relative isolate w-full overflow-hidden bg-[#0d1117] text-white",
+      bgImages ? "sticky top-0 h-[100svh] min-h-[640px] max-h-[1080px]" : "h-[100svh] min-h-[640px] max-h-[1080px]"
+    )}>
       {/* media */}
       <div ref={mediaRef} className="absolute inset-0 will-change-transform scale-[1.06]">
         {hero.video ? (
           <video src={hero.video} poster={hero.image} autoPlay muted loop playsInline className="h-full w-full object-cover" />
+        ) : bgImages ? (
+          bgImages.map((src, i) => (
+            <Image key={src} src={src} alt="" fill priority={i === 0} sizes="100vw"
+              className={cn(
+                "object-cover transition-[opacity,transform] duration-[1000ms] ease-[var(--ease-out)]",
+                i === active ? "opacity-100 scale-100" : "opacity-0 scale-105"
+              )}
+            />
+          ))
         ) : (
           <Image src={hero.image} alt="" fill priority sizes="100vw" className="object-cover" />
         )}
       </div>
+
       {/* cinematic vignette + gradients */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0d13]/90 via-[#0a0d13]/35 to-[#0a0d13]/30" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#0a0d13]/70 via-transparent to-transparent rtl:bg-gradient-to-l" />
@@ -115,26 +188,35 @@ export function Hero({ hero, patterns, stats }: Props) {
 
           {/* framed pattern preview */}
           {current && (
-            <div className="anim-scale-fade hidden lg:col-span-5 lg:block" style={{ animationDelay: "520ms" }}>
+            <div ref={cardRef} className="anim-scale-fade hidden lg:col-span-5 lg:block will-change-transform" style={{ animationDelay: "520ms" }}>
               <div className="ms-auto max-w-[400px]">
                 <div className="glass rounded-xl p-2 shadow-elevated !bg-white/10 !border-white/20">
                   <Link href={href(locale, `/patterns/${current.slug}`)} className="group relative block aspect-[4/5] overflow-hidden rounded-lg">
                     {patterns.map((p, i) => (
-                      <Image key={p.id} src={p.image} alt={t(p.title, locale)} fill sizes="400px" priority={i === 0} className={cn("object-cover transition-[opacity,transform] duration-[900ms] ease-[var(--ease-out)]", i === active ? "opacity-100 scale-100" : "opacity-0 scale-105")} />
+                      <Image key={p.id} src={p.image} alt={t(p.title, locale)} fill sizes="400px" priority={i === 0}
+                        className={cn("object-cover transition-[opacity,transform] duration-[900ms] ease-[var(--ease-out)]", i === (active % patterns.length) ? "opacity-100 scale-100" : "opacity-0 scale-105")}
+                      />
                     ))}
                     <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-4">
                       <div>
                         <p className="text-caption text-white/70" dir="ltr">{current.sku}</p>
                         <p className="font-display text-h3">{t(current.title, locale)}</p>
                       </div>
-                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black transition-transform group-hover:scale-105"><ArrowUpRight className="h-4 w-4 rtl-flip" /></span>
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black transition-transform group-hover:scale-105">
+                        <ArrowUpRight className="h-4 w-4 rtl-flip" />
+                      </span>
                     </div>
                   </Link>
-                  {/* visual navigation + progress */}
+                  {/* progress bar — scroll-driven or timer-driven */}
                   <div className="flex items-center gap-2 px-2 pb-1 pt-3">
                     {patterns.map((p, i) => (
-                      <button key={p.id} type="button" aria-label={t(p.title, locale)} onClick={() => setActive(i)} className="relative h-1 flex-1 overflow-hidden rounded-full bg-white/25">
-                        <span className={cn("absolute inset-y-0 start-0 rounded-full bg-white", i < active && "w-full", i > active && "w-0")} style={i === active ? { width: `${progress * 100}%` } : undefined} />
+                      <button key={p.id} type="button" aria-label={t(p.title, locale)}
+                        onClick={() => !bgImages && setActive(i)}
+                        className="relative h-1 flex-1 overflow-hidden rounded-full bg-white/25"
+                      >
+                        <span className={cn("absolute inset-y-0 start-0 rounded-full bg-white", i < (active % patterns.length) && "w-full", i > (active % patterns.length) && "w-0")}
+                          style={i === (active % patterns.length) ? { width: `${progress * 100}%` } : undefined}
+                        />
                       </button>
                     ))}
                   </div>
@@ -157,4 +239,15 @@ export function Hero({ hero, patterns, stats }: Props) {
       </div>
     </section>
   );
+
+  /* scroll-driven: wrap in tall div so sticky section has room to "scroll through" */
+  if (bgImages) {
+    return (
+      <div ref={wrapperRef} style={{ height: `${count * 100}svh` }}>
+        {inner}
+      </div>
+    );
+  }
+
+  return inner;
 }

@@ -220,6 +220,7 @@ export interface HeroContent {
   titleB: Localized;
   description: Localized;
   image: string;
+  images?: string[];
   video?: string;
   ctaHref: string;
   cta2Href: string;

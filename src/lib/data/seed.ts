@@ -331,6 +331,12 @@ export const hero: HeroContent = {
   titleB: L("فضا را روایت می‌کنند.", "tell the story of a space."),
   description: L("رزی آتلیه پلتفرم کشف الگو، محصولات دکوراتیو و همکاری با طراحان مستقل است — از سطح تا سبک زندگی.", "Rosie Atelier is a platform for discovering patterns, decorative products and collaborating with independent designers — from surface to lifestyle."),
   image: "/images/hero/hero-main.jpg",
+  images: [
+    "/images/hero/hero-main.jpg",
+    "/images/portfolios/pf01.jpg",
+    "/images/portfolios/pf04.jpg",
+    "/images/portfolios/pf06.jpg",
+  ],
   ctaHref: "/patterns",
   cta2Href: "/portfolio",
   featuredPatternIds: ["p-1", "p-4", "p-8", "p-3"],
